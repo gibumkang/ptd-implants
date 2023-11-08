@@ -38,7 +38,7 @@ app.post("/send", async (req, res) => {
     text: message,
     name,
     html: `
-    <p>You have a new lead from your website:</p>
+    <p>You have a new lead from your website (https://implant-dentistry-frontend.vercel.app/):</p>
     <p>Name: ${name}</p>
     <p>Email: ${email}</p>
     <p>Phone: ${phone}</p>
