@@ -1,6 +1,65 @@
+"use client";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
+import { useReducer } from "react";
+import { E164Number } from "libphonenumber-js/types";
 import Link from "next/link";
 
+type StateProps = {
+  name: string | undefined;
+  email: string | undefined;
+  phone: E164Number | undefined;
+};
+
+type StateActions = {
+  type: STATEACTIONS;
+  payload: string | E164Number;
+};
+
+enum STATEACTIONS {
+  NAME,
+  EMAIL,
+  PHONE,
+}
+
 export default function Home() {
+  const initialState: StateProps = {
+    name: undefined,
+    email: undefined,
+    phone: undefined,
+  };
+
+  const reducer = (state: StateProps, action: StateActions) => {
+    switch (action.type) {
+      case STATEACTIONS.NAME:
+        return { ...state, name: action.payload };
+      case STATEACTIONS.EMAIL:
+        return { ...state, email: action.payload };
+      case STATEACTIONS.PHONE:
+        return { ...state, phone: action.payload };
+      default:
+        return state;
+    }
+  };
+
+  const submitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:8080/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(state),
+      });
+      const data = await response.json();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
   return (
     <main>
       <section className="bg-[#A3C0E6] p-10 sm:p-20">
@@ -106,14 +165,78 @@ export default function Home() {
           </div>
         </section>
       </section>
-      <section className="bg-[#A3C0E6] p-10 sm:p-20 text-[#000000]">
+      <section className="bg-[#A3C0E6] p-10 sm:p-20">
         <section className="max-w-[1100px] mx-auto">
           <h3 className="text-[32px] font-header font-bold text-center">
             We offer financing for every option.
           </h3>
-          <form action="">Form</form>
+          <form
+            onSubmit={submitEmail}
+            className="bg-[white] max-w-[400px] mx-auto p-5 m-5 rounded shadow-lg mb-14"
+          >
+            <div>
+              <input
+                type="text"
+                placeholder="Full Name"
+                className="w-full p-1 my-2 border rounded"
+                value={state.name}
+                onChange={(e) =>
+                  dispatch({
+                    type: STATEACTIONS.NAME,
+                    payload: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+            <div>
+              <input
+                type="email"
+                placeholder="Email Address"
+                className="w-full p-1 my-2 border rounded"
+                value={state.email}
+                onChange={(e) =>
+                  dispatch({
+                    type: STATEACTIONS.EMAIL,
+                    payload: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+            <div>
+              <PhoneInput
+                placeholder="Phone Number"
+                value={state.phone}
+                className="w-full p-1 my-2 border rounded"
+                onChange={(e) =>
+                  dispatch({ type: STATEACTIONS.PHONE, payload: e! })
+                }
+              />
+            </div>
+            <div>
+              <input
+                type="submit"
+                value="Submit"
+                className="bg-[#54a53b] py-1 px-3 text-[#fff] rounded font-bold mt-1 mb-5"
+              />
+            </div>
+            <p className="mb-3 text-[14px]">
+              Expect us to reach out via text, phone and email within 24hrs and
+              on Monday if you contacted us during the weekend.
+            </p>
+            <p className="mb-3 text-[14px]">
+              Our office number is{" "}
+              <Link href="tel:7026169655" className="underline">
+                702-616-9655
+              </Link>{" "}
+              if you would like to call and schedule a consultation.
+            </p>
+          </form>
           <section>
-            <h3>Your Providers</h3>
+            <h3 className="text-[27px] font-header font-bold text-center mb-3">
+              Your Providers
+            </h3>
             <section className="max-w-[1100px] mx-auto block md:flex justify-center gap-10 text-center">
               <div className="mb-8 md:mb-0">
                 <img
