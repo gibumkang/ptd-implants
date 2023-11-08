@@ -33,7 +33,7 @@ app.post("/send", async (req, res) => {
   const { name, email, phone, message } = req.body;
   const mailObject = {
     from: `${process.env.CLIENT_NAME} <${process.env.CLIENT_NO_REPLY}>`,
-    to: process.env.EMAIL_USER, // Replace with 'email' that is extracted from req.body
+    to: process.env.CLIENT_EMAIL, // Replace with 'email' that is extracted from req.body
     subject: `You have a new submission from ${process.env.CLIENT_NAME} 🎉`,
     text: message,
     name,
