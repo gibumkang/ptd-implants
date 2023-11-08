@@ -45,7 +45,7 @@ export default function Home() {
   const submitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8080/send", {
+      const response = await fetch("https://ptd-implants.vercel.app/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,6 +53,7 @@ export default function Home() {
         body: JSON.stringify(state),
       });
       const data = await response.json();
+      console.log("data: ", data);
     } catch (error) {
       console.error(error);
     }

@@ -17,16 +17,28 @@ const sendEmail = async (mailObject: Props) => {
   const { from, to, subject, text, html } = mailObject;
   const transporter = nodemailer.createTransport({
     service: "gmail",
+    port: 465,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
-    tls: {
-      rejectUnauthorized: false,
-    },
+    secure: true,
   });
 
-  const mailOptions = {
+  await new Promise((resolve, reject) => {
+    // verify connection configuration
+    transporter.verify(function (error: any, success: any) {
+      if (error) {
+        console.log(error);
+        reject(error);
+      } else {
+        console.log("Server is ready to take our messages");
+        resolve(success);
+      }
+    });
+  });
+
+  const mailData = {
     from,
     to,
     subject,
@@ -42,12 +54,17 @@ const sendEmail = async (mailObject: Props) => {
     })
   );
 
-  await transporter.sendMail(mailOptions, (error: any, info: any) => {
-    if (error) {
-      console.error(error);
-    } else {
-      console.log(info);
-    }
+  await new Promise((resolve, reject) => {
+    // send mail
+    transporter.sendMail(mailData, (err: any, info: any) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+      } else {
+        console.log(info);
+        resolve(info);
+      }
+    });
   });
 };
 
