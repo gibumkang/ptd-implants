@@ -1,14 +1,16 @@
 "use client";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { E164Number } from "libphonenumber-js/types";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type StateProps = {
   name: string | undefined;
   email: string | undefined;
   phone: E164Number | undefined;
+  submitted: boolean;
 };
 
 type StateActions = {
@@ -20,6 +22,7 @@ enum STATEACTIONS {
   NAME,
   EMAIL,
   PHONE,
+  SUBMITTED,
 }
 
 export default function Home() {
@@ -27,6 +30,7 @@ export default function Home() {
     name: undefined,
     email: undefined,
     phone: undefined,
+    submitted: false,
   };
 
   const reducer = (state: StateProps, action: StateActions) => {
@@ -37,10 +41,44 @@ export default function Home() {
         return { ...state, email: action.payload };
       case STATEACTIONS.PHONE:
         return { ...state, phone: action.payload };
+      case STATEACTIONS.SUBMITTED:
+        return { ...state, submitted: true };
       default:
         return state;
     }
   };
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    if (state.submitted) {
+      const script = document.createElement("script");
+      const noscript = document.createElement("noscript");
+      noscript.innerHTML = `<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=987563355877513&ev=PageView&noscript=1" />`;
+      script.innerHTML = `
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '987563355877513');
+      fbq('track', 'PageView');
+      `;
+      script.async = true;
+      document.body.appendChild(noscript);
+      document.body.appendChild(script);
+      console.log("pixel fired successfully");
+      return () => {
+        document.body.removeChild(script);
+        document.body.removeChild(noscript);
+      };
+    }
+  }, [state.submitted]);
+
+  const router = useRouter();
 
   const submitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,12 +92,12 @@ export default function Home() {
       });
       const data = await response.json();
       console.log("data: ", data);
+      dispatch({ type: STATEACTIONS.SUBMITTED, payload: "" });
+      router.push("/thank-you");
     } catch (error) {
       console.error(error);
     }
   };
-
-  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <main>
@@ -218,8 +256,9 @@ export default function Home() {
             <div>
               <input
                 type="submit"
-                value="Submit"
-                className="bg-[#54a53b] py-1 px-3 text-[#fff] rounded font-bold mt-1 mb-5"
+                value={state.submitted ? "Submitted" : "Submit"}
+                className="bg-[#54a53b] py-1 px-3 text-[#fff] rounded font-bold mt-1 mb-5 disabled:bg-[#596f53] disabled:cursor-not-allowed"
+                disabled={state.submitted}
               />
             </div>
             <p className="mb-3 text-[14px]">
