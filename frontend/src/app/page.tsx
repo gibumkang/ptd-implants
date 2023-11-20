@@ -104,7 +104,7 @@ export default function Home() {
       <section className="bg-[#A3C0E6] p-10 sm:p-20">
         <section className="max-w-[1100px] mx-auto">
           <h1 className="text-[32px] font-header font-bold text-center">
-            Do you wear dentures or need an implant?
+            Las Vegas Dental Implants
           </h1>
           <div className="youtube-container my-5">
             <iframe
