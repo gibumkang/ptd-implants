@@ -209,70 +209,13 @@ export default function Home() {
           <h3 className="text-[32px] font-header font-bold text-center">
             We offer financing for every option.
           </h3>
-          <form
-            onSubmit={submitEmail}
-            className="bg-[white] max-w-[400px] mx-auto p-5 m-5 rounded shadow-lg mb-14"
-          >
-            <div>
-              <input
-                type="text"
-                placeholder="Full Name"
-                className="w-full p-1 my-2 border rounded"
-                value={state.name}
-                onChange={(e) =>
-                  dispatch({
-                    type: STATEACTIONS.NAME,
-                    payload: e.target.value,
-                  })
-                }
-                required
-              />
-            </div>
-            <div>
-              <input
-                type="email"
-                placeholder="Email Address"
-                className="w-full p-1 my-2 border rounded"
-                value={state.email}
-                onChange={(e) =>
-                  dispatch({
-                    type: STATEACTIONS.EMAIL,
-                    payload: e.target.value,
-                  })
-                }
-                required
-              />
-            </div>
-            <div>
-              <PhoneInput
-                placeholder="Phone Number"
-                value={state.phone}
-                className="w-full p-1 my-2 border rounded"
-                onChange={(e) =>
-                  dispatch({ type: STATEACTIONS.PHONE, payload: e! })
-                }
-              />
-            </div>
-            <div>
-              <input
-                type="submit"
-                value={state.submitted ? "Submitted" : "Submit"}
-                className="bg-[#54a53b] py-1 px-3 text-[#fff] rounded font-bold mt-1 mb-5 disabled:bg-[#596f53] disabled:cursor-not-allowed"
-                disabled={state.submitted}
-              />
-            </div>
-            <p className="mb-3 text-[14px]">
-              Expect us to reach out via text, phone and email within 24hrs and
-              on Monday if you contacted us during the weekend.
-            </p>
-            <p className="mb-3 text-[14px]">
-              Our office number is{" "}
-              <Link href="tel:7026169655" className="underline">
-                702-616-9655
-              </Link>{" "}
-              if you would like to call and schedule a consultation.
-            </p>
-          </form>
+          <section className="mx-auto">
+            <a href="http://eepurl.com/iEpT7w">
+              <div className="text-center my-5 px-4 py-2 bg-[#358840] text-[#ffffff] block mx-auto w-[300px] font-bold text-[32px] cursor-pointer rounded">
+                Inquire Now
+              </div>
+            </a>
+          </section>
           <section>
             <h3 className="text-[27px] font-header font-bold text-center mb-3">
               Your Providers
